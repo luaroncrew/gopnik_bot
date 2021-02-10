@@ -20,30 +20,28 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-
-# Define a few command handlers. These usually take the two arguments update and
-# context. Error handlers also receive the raised TelegramError object in error.
 def start(update: Update, context: CallbackContext) -> None:
-    """Send a message when the command /start is issued."""
-    update.message.reply_text('Hi!')
+    update.message.reply_text(
+        'дарова! вошел в хату - представься. Читать я не умею, поэтому покажи мне фото'
+    )
 
 
 def help_command(update: Update, context: CallbackContext) -> None:
-    """Send a message when the command /help is issued."""
-    update.message.reply_text('Help!')
+    update.message.reply_text('Сюда можно отправлять только фото')
 
 
 def echo(update: Update, context: CallbackContext) -> None:
-    """Add a funny pic on the photo"""
-    # downloading photo
+    # скачиваем фото на рабочую машину
     photo_from_message = update.message.photo[-1].get_file()
     photo_from_message.download('photo_file.jpg')
 
-    # opening photo with Pillow and adding funny caption
+    # открываем фотку и добавляем на неё фразу
     phrase = PHRASE_BASE[random.randint(0, 4)]
     photo = Image.open('photo_file.jpg')
     width, height = photo.size
     caption = ImageDraw.Draw(photo)
+
+    # далее идут танцы с бубном, которые надо исправить
     font = ImageFont.truetype('Lobster.ttf', size=round(height * 0.1))
     text_w, text_h = caption.textsize(phrase, font)
     proportion = text_h/text_w
@@ -56,20 +54,16 @@ def echo(update: Update, context: CallbackContext) -> None:
     caption.text(start_position, phrase, font=font, fill='#FFFFFF')
     photo.save('rdy_to_send.jpg')
 
-    # sending photo to a user
+    # отправляем фото пользователю обратно
     update.message.reply_photo(photo=open('rdy_to_send.jpg', 'rb'))
 
-    # deleting all the files
+    # удаляем следы нашей работы
     os.remove('rdy_to_send.jpg')
     os.remove('photo_file.jpg')
 
 
 def main():
-    """Start the bot."""
-    # Create the Updater and pass it your bot's token.
     updater = Updater(TOKEN)
-
-    # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
 
     # on different commands - answer in Telegram
