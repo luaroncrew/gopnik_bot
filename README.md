@@ -9,3 +9,4 @@
 * запустить его `source venv/Scripts/activate` (windows only)
 * установить все зависимости из requirements.txt `pip install -r requirements.txt`
 * создать файл .env в директории проекта и указать там токен тг-бота в виде TG_TOKEN=<токен> (можно получить у botfather)
+* запустить sender.py из виртуального окружения
